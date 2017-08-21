@@ -41,6 +41,7 @@ public class RuiWatchView extends View {
 		super(context, attrs, defStyleAttr);
 	}
 
+	//开始执行绘制过程，每秒绘制一次
 	public void start(){
 		new Timer().schedule(new TimerTask() {
 			@Override
@@ -63,6 +64,7 @@ public class RuiWatchView extends View {
 		drawPoints(canvas, len);
 	}
 
+	//绘制表盘
 	protected void drawPlate(Canvas canvas, int len){
 		canvas.save();
 
@@ -101,6 +103,7 @@ public class RuiWatchView extends View {
 		canvas.restore();
 	}
 
+	//转换显示的时间
 	private int getHours(int hours){
 		switch (hours){
 			case 1:
@@ -132,47 +135,53 @@ public class RuiWatchView extends View {
 		}
 	}
 
+	//绘制三根指针
 	protected void drawPoints(Canvas canvas, int len){
 		mCalendar.setTimeInMillis(System.currentTimeMillis());
 		int hours = mCalendar.get(Calendar.HOUR) % 12;
 		int minutes = mCalendar.get(Calendar.MINUTE);
 		int seconds = mCalendar.get(Calendar.SECOND);
-
-		//画时针，计算时针的转过的角度
-		int degree = 360 / 12 * hours + (30 * minutes / 60);
-		double radians = Math.toRadians(degree);
+		int degree;
+		double radians;
 		int r = len / 2;
-		//时针的起点为圆的中点
 		int startX = r;
 		int startY = r;
+		int endX;
+		int endY;
+
+		//画时针，计算时针的转过的角度
+		degree = 360 / 12 * hours + (30 * minutes / 60);
+		radians = Math.toRadians(degree);
+		//时针的起点为圆的中点
+
 		//通过三角函数计算时针终点的位置，时针最短，取长度的0.5倍
-		int endX = (int)(startX + r * Math.cos(radians) * 0.5);
-		int endY = (int)(startY + r * Math.sin(radians) * 0.5);
+		endX = (int) (startX + r * Math.cos(radians) * 0.5);
+		endY = (int) (startY + r * Math.sin(radians) * 0.5);
 		canvas.save();
-		mPaint.setStrokeWidth(r/71);
+		mPaint.setStrokeWidth(r / 71);
 		//初始角度是0，应该从12点钟开始算，所以要逆时针旋转90度
 		canvas.rotate((-90), r, r);
 		canvas.drawLine(startX, startY, endX, endY, mPaint);
 
 		radians = Math.toRadians(degree - 180);
-		endX = (int)(startX + r * 0.05 * Math.cos(radians));
-		endY = (int)(startY + r * 0.05 * Math.sin(radians));
+		endX = (int) (startX + r * 0.05 * Math.cos(radians));
+		endY = (int) (startY + r * 0.05 * Math.sin(radians));
 		canvas.drawLine(startX, startY, endX, endY, mPaint);
 		canvas.restore();
 
 		//画分针，计算分针转过的角度
 		degree = 360 / 60 * minutes + (6 * seconds / 60);
 		radians = Math.toRadians(degree);
-		endX = (int)(startX + r * Math.cos(radians) * 0.6);
-		endY = (int)(startY + r * Math.sin(radians) * 0.6);
+		endX = (int) (startX + r * Math.cos(radians) * 0.6);
+		endY = (int) (startY + r * Math.sin(radians) * 0.6);
 		canvas.save();
 		mPaint.setStrokeWidth(r / 120);
 		canvas.rotate(-90, r, r);
 		canvas.drawLine(startX, startY, endX, endY, mPaint);
 
 		radians = Math.toRadians(degree - 180);
-		endX = (int)(startX + r * 0.08 * Math.cos(radians));
-		endY = (int)(startY + r * 0.08 * Math.sin(radians));
+		endX = (int) (startX + r * 0.08 * Math.cos(radians));
+		endY = (int) (startY + r * 0.08 * Math.sin(radians));
 		canvas.drawLine(startX, startY, endX, endY, mPaint);
 		canvas.restore();
 
