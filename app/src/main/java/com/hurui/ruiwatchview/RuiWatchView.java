@@ -1,6 +1,7 @@
 package com.hurui.ruiwatchview;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -22,6 +23,9 @@ public class RuiWatchView extends View {
 
 	private Paint mPaint;
 	private Calendar mCalendar;
+	private int mWidth;
+	private int mHeight;
+	private int mBackgroundColor;
 
 	public RuiWatchView(Context context) {
 		super(context);
@@ -29,12 +33,17 @@ public class RuiWatchView extends View {
 
 	public RuiWatchView(Context context, @Nullable AttributeSet attrs) {
 		super(context, attrs);
+
+		TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RuiWatchView);
+		mBackgroundColor = typedArray.getColor(R.styleable.RuiWatchView_custom_background, Color.BLACK);
+
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		mPaint.setColor(Color.BLACK);
+		mPaint.setColor(mBackgroundColor);
 		mPaint.setStyle(Paint.Style.FILL);
 
 		mCalendar = Calendar.getInstance();
 
+		typedArray.recycle();
 	}
 
 	public RuiWatchView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -55,9 +64,9 @@ public class RuiWatchView extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		int width = this.getMeasuredWidth();
-		int height = this.getMeasuredHeight();
-		int len = Math.min(width, height);
+		mWidth = this.getMeasuredWidth();
+		mHeight = this.getMeasuredHeight();
+		int len = Math.min(mWidth, mHeight);
 		mPaint.setTextSize(len / 24);
 		mPaint.setStrokeWidth(len / 2 / 720);
 		drawPlate(canvas, len);
@@ -69,7 +78,7 @@ public class RuiWatchView extends View {
 		canvas.save();
 
 		int r = len / 2;
-		mPaint.setColor(Color.BLACK);
+		mPaint.setColor(mBackgroundColor);
 		//绘制表盘
 		canvas.drawCircle(r, r, r-r/144, mPaint);
 		for(int i=0; i< 60; i++){

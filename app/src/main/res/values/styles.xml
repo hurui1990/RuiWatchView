@@ -8,4 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <declare-styleable name="RuiWatchView">
+        <attr name="custom_background" format="color"></attr>
+    </declare-styleable>
+
 </resources>

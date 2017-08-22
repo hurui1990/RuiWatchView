@@ -5,13 +5,14 @@ import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
 
+	private RuiWatchView mRuiWatchView;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		RuiWatchView ruiWatchView = findViewById(R.id.watch_view);
-
-		ruiWatchView.start();
+		mRuiWatchView = findViewById(R.id.watch_view);
+		mRuiWatchView.start();
 	}
 }
