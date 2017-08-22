@@ -9,6 +9,7 @@
         android:id="@+id/watch_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        rui:custom_background="#064539"/>
+        rui:custom_background="#064539"
+        rui:custom_display_type="Arabia"/>
 
 </LinearLayout>

@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import java.util.Calendar;
@@ -26,6 +25,7 @@ public class RuiWatchView extends View {
 	private int mWidth;
 	private int mHeight;
 	private int mBackgroundColor;
+	private int mDisplayType;
 
 	public RuiWatchView(Context context) {
 		super(context);
@@ -36,11 +36,11 @@ public class RuiWatchView extends View {
 
 		TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RuiWatchView);
 		mBackgroundColor = typedArray.getColor(R.styleable.RuiWatchView_custom_background, Color.BLACK);
+		mDisplayType = typedArray.getInteger(R.styleable.RuiWatchView_custom_display_type, 0);
 
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mPaint.setColor(mBackgroundColor);
 		mPaint.setStyle(Paint.Style.FILL);
-
 		mCalendar = Calendar.getInstance();
 
 		typedArray.recycle();
@@ -98,8 +98,12 @@ public class RuiWatchView extends View {
 			int degree = 30 * i;
 			double radians = Math.toRadians(degree);
 			mPaint.setStrokeWidth(4);
-			int hour = getHours(i);
-			String hourText = hour+"";
+			String hourText;
+			if(mDisplayType == 1){
+				hourText = getHoursGreece(i);
+			}else {
+				hourText = getHoursArabia(i)+"";
+			}
 			Rect rect = new Rect();
 			mPaint.getTextBounds(hourText, 0, hourText.length(), rect);
 			int textWidth = rect.width();
@@ -112,8 +116,8 @@ public class RuiWatchView extends View {
 		canvas.restore();
 	}
 
-	//转换显示的时间
-	private int getHours(int hours){
+	//转换显示的时间为阿拉伯数字
+	private int getHoursArabia(int hours){
 		switch (hours){
 			case 1:
 				return 4;
@@ -141,6 +145,38 @@ public class RuiWatchView extends View {
 				return 3;
 			default:
 				return 0;
+		}
+	}
+
+	//转换显示的时间为希腊数字
+	private String getHoursGreece(int hours){
+		switch (hours){
+			case 1:
+				return "Ⅳ";
+			case 2:
+				return "V";
+			case 3:
+				return "VI";
+			case 4:
+				return "VII";
+			case 5:
+				return "VIII";
+			case 6:
+				return "IX";
+			case 7:
+				return "X";
+			case 8:
+				return "XI";
+			case 9:
+				return "XII";
+			case 10:
+				return "I";
+			case 11:
+				return "II";
+			case 12:
+				return "III";
+			default:
+				return "";
 		}
 	}
 
@@ -209,5 +245,48 @@ public class RuiWatchView extends View {
 		endY = (int)(startY + r * 0.1 * Math.sin(radians));
 		canvas.drawLine(startX, startY, endX, endY, mPaint);
 		canvas.restore();
+	}
+
+	public void setDisplayType(DISPLAY_TYPE displayType){
+		switch (displayType){
+			case ARABIA:
+				mDisplayType = 0;
+				break;
+			case GREECE:
+				mDisplayType = 1;
+				break;
+		}
+		invalidate();
+	}
+
+	public void setPlateColor(PLATE_COLOR plateColor){
+		switch (plateColor){
+			case BLACK:
+				mBackgroundColor = Color.BLACK;
+				break;
+			case BLUE:
+				mBackgroundColor = Color.BLUE;
+				break;
+			case GREEN_DARK:
+				mBackgroundColor = Color.parseColor("#FF064539");
+				break;
+			case GREEN_LIGHT:
+				mBackgroundColor = Color.parseColor("#FF0ED6B0");
+				break;
+		}
+	}
+
+	public static enum DISPLAY_TYPE{
+		ARABIA,
+		GREECE;
+		private DISPLAY_TYPE(){}
+	}
+
+	public static enum PLATE_COLOR{
+		BLACK,
+		GREEN_DARK,
+		GREEN_LIGHT,
+		BLUE;
+		private PLATE_COLOR(){}
 	}
 }
