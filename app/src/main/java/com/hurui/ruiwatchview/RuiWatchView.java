@@ -50,7 +50,9 @@ public class RuiWatchView extends View {
 		super(context, attrs, defStyleAttr);
 	}
 
-	//开始执行绘制过程，每秒绘制一次
+	/**
+	 * 开始执行绘制过程，每秒绘制一次
+	 * */
 	public void start(){
 		new Timer().schedule(new TimerTask() {
 			@Override
@@ -71,6 +73,13 @@ public class RuiWatchView extends View {
 		mPaint.setStrokeWidth(len / 2 / 720);
 		drawPlate(canvas, len);
 		drawPoints(canvas, len);
+	}
+
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+		int size = Math.min(widthMeasureSpec, heightMeasureSpec);
+		setMeasuredDimension(size, size);
 	}
 
 	//绘制表盘

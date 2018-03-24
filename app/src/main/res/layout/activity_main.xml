@@ -3,13 +3,14 @@
     xmlns:rui="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center">
 
     <com.hurui.ruiwatchview.RuiWatchView
         android:id="@+id/watch_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
         rui:custom_background="#064539"
-        rui:custom_display_type="Arabia"/>
+        rui:custom_display_type="Arabia" />
 
 </LinearLayout>
