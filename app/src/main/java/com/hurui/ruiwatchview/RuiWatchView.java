@@ -26,6 +26,7 @@ public class RuiWatchView extends View {
 	private int mHeight;
 	private int mBackgroundColor;
 	private int mDisplayType;
+	private int mMinSize;
 
 	public RuiWatchView(Context context) {
 		super(context);
@@ -37,6 +38,7 @@ public class RuiWatchView extends View {
 		TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RuiWatchView);
 		mBackgroundColor = typedArray.getColor(R.styleable.RuiWatchView_custom_background, Color.BLACK);
 		mDisplayType = typedArray.getInteger(R.styleable.RuiWatchView_custom_display_type, 0);
+		mMinSize = (int) context.getResources().getDimension(R.dimen.defalut_min_size);
 
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mPaint.setColor(mBackgroundColor);
@@ -78,7 +80,12 @@ public class RuiWatchView extends View {
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		int size = Math.min(widthMeasureSpec, heightMeasureSpec);
+		int width  = MeasureSpec.getSize(widthMeasureSpec);
+		int height = MeasureSpec.getSize(heightMeasureSpec);
+		int size = Math.min(width, height);
+		if(size < mMinSize){
+			size = mMinSize;
+		}
 		setMeasuredDimension(size, size);
 	}
 

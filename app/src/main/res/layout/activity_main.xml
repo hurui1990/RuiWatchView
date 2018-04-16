@@ -8,8 +8,8 @@
 
     <com.hurui.ruiwatchview.RuiWatchView
         android:id="@+id/watch_view"
-        android:layout_width="300dp"
-        android:layout_height="200dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         rui:custom_background="#064539"
         rui:custom_display_type="Arabia" />
 
