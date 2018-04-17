@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.WindowManager;
 
 import java.util.Calendar;
 import java.util.Timer;
@@ -26,7 +27,9 @@ public class RuiWatchView extends View {
 	private int mHeight;
 	private int mBackgroundColor;
 	private int mDisplayType;
-	private int mMinSize;
+	private WindowManager mWindowManager;
+	private int mScreenWidth;
+	private int mScreenHeight;
 
 	public RuiWatchView(Context context) {
 		super(context);
@@ -38,12 +41,15 @@ public class RuiWatchView extends View {
 		TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RuiWatchView);
 		mBackgroundColor = typedArray.getColor(R.styleable.RuiWatchView_custom_background, Color.BLACK);
 		mDisplayType = typedArray.getInteger(R.styleable.RuiWatchView_custom_display_type, 0);
-		mMinSize = (int) context.getResources().getDimension(R.dimen.defalut_min_size);
 
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mPaint.setColor(mBackgroundColor);
 		mPaint.setStyle(Paint.Style.FILL);
 		mCalendar = Calendar.getInstance();
+
+		mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+		mScreenWidth = mWindowManager.getDefaultDisplay().getWidth();
+		mScreenHeight = mWindowManager.getDefaultDisplay().getHeight();
 
 		typedArray.recycle();
 	}
@@ -80,13 +86,29 @@ public class RuiWatchView extends View {
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+		int resultWidth = 0;
+		int resultHeight = 0;
 		int width  = MeasureSpec.getSize(widthMeasureSpec);
+		int widthMode = MeasureSpec.getMode(widthMeasureSpec);
 		int height = MeasureSpec.getSize(heightMeasureSpec);
-		int size = Math.min(width, height);
-		if(size < mMinSize){
-			size = mMinSize;
+		int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+
+		//计算宽度
+		if(widthMode == MeasureSpec.EXACTLY){
+			resultWidth = width;
+		}else {
+			resultWidth = getMeasuredWidth();
 		}
-		setMeasuredDimension(size, size);
+
+		//计算高度
+		if(heightMode == MeasureSpec.EXACTLY){
+			resultHeight = height;
+		}else {
+			resultHeight = getMeasuredHeight();
+		}
+		int resultSize = Math.min(resultWidth, resultHeight);
+		resultSize = Math.max(resultSize, Math.min(mScreenWidth, mScreenHeight) / 2);
+		setMeasuredDimension(resultSize, resultSize);
 	}
 
 	//绘制表盘
